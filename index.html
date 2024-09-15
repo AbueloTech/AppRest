@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terreno Broaster</title>
+    <title>Terreno Broaster POS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
         .product-card {
             cursor: pointer;
@@ -611,6 +612,7 @@
                 </table>
                 <p class="text-end"><strong>Total de Ventas: $${totalSales.toFixed(2)}</strong></p>
                 <button class="btn btn-primary" onclick="printStatistics('product-sales')">Imprimir Estadísticas</button>
+                <button class="btn btn-success" onclick="exportToExcel('product-sales')">Exportar a Excel</button>
             `;
 
             mainContent.innerHTML = salesHTML;
@@ -646,6 +648,7 @@
                 </table>
                 <p class="text-end"><strong>Total de Pagos: $${totalPayments.toFixed(2)}</strong></p>
                 <button class="btn btn-primary" onclick="printStatistics('payment-methods')">Imprimir Estadísticas</button>
+                <button class="btn btn-success" onclick="exportToExcel('payment-methods')">Exportar a Excel</button>
             `;
 
             mainContent.innerHTML = paymentHTML;
@@ -662,6 +665,7 @@
                 <p class="lead">Fecha: ${today}</p>
                 <h3 class="mt-4">Total de Ventas: $${totalSales.toFixed(2)}</h3>
                 <button class="btn btn-primary mt-3" onclick="printStatistics('daily-sales')">Imprimir Estadísticas</button>
+                <button class="btn btn-success mt-3" onclick="exportToExcel('daily-sales')">Exportar a Excel</button>
             `;
         }
 
@@ -706,6 +710,7 @@
                     </tbody>
                 </table>
                 <button class="btn btn-primary mt-3" onclick="printStatistics('top-selling-products')">Imprimir Estadísticas</button>
+                <button class="btn btn-success mt-3" onclick="exportToExcel('top-selling-products')">Exportar a Excel</button>
             `;
 
             mainContent.innerHTML = topProductsHTML;
@@ -741,6 +746,7 @@
                 </table>
                 <p class="text-end"><strong>Total de Ventas: $${totalSales.toFixed(2)}</strong></p>
                 <button class="btn btn-primary mt-3" onclick="printStatistics('sales-by-payment-method')">Imprimir Estadísticas</button>
+                <button class="btn btn-success mt-3" onclick="exportToExcel('sales-by-payment-method')">Exportar a Excel</button>
             `;
 
             mainContent.innerHTML = salesByMethodHTML;
@@ -767,6 +773,75 @@
             printWindow.document.write('</body></html>');
             printWindow.document.close();
             printWindow.print();
+        }
+
+        function exportToExcel(statisticsType) {
+            let data = [];
+            let filename = '';
+
+            switch(statisticsType) {
+                case 'product-sales':
+                    data = salesHistory.map(sale => ({
+                        'Fecha': sale.date.toLocaleString(),
+                        'Número de Ticket': sale.ticketNumber,
+                        'Producto': sale.productName,
+                        'Cantidad': sale.quantity,
+                        'Precio': sale.price,
+                        'Subtotal': sale.subtotal
+                    }));
+                    filename = 'Ventas_por_Producto.xlsx';
+                    break;
+                case 'payment-methods':
+                    data = Object.entries(paymentMethodTotals).map(([method, total]) => ({
+                        'Forma de Pago': method,
+                        'Monto Total': total
+                    }));
+                    filename = 'Resumen_Formas_de_Pago.xlsx';
+                    break;
+                case 'daily-sales':
+                    const today = new Date().toDateString();
+                    const dailySales = salesHistory.filter(sale => sale.date.toDateString() === today);
+                    data = dailySales.map(sale => ({
+                        'Fecha': sale.date.toLocaleString(),
+                        'Número de Ticket': sale.ticketNumber,
+                        'Producto': sale.productName,
+                        'Cantidad': sale.quantity,
+                        'Precio': sale.price,
+                        'Subtotal': sale.subtotal
+                    }));
+                    filename = 'Ventas_del_Dia.xlsx';
+                    break;
+                case 'top-selling-products':
+                    const productSales = {};
+                    salesHistory.forEach(sale => {
+                        if (productSales[sale.productName]) {
+                            productSales[sale.productName] += sale.quantity;
+                        } else {
+                            productSales[sale.productName] = sale.quantity;
+                        }
+                    });
+                    data = Object.entries(productSales)
+                        .sort((a, b) => b[1] - a[1])
+                        .slice(0, 5)
+                        .map(([product, quantity]) => ({
+                            'Producto': product,
+                            'Cantidad Vendida': quantity
+                        }));
+                    filename = 'Top_5_Productos_Vendidos.xlsx';
+                    break;
+                case 'sales-by-payment-method':
+                    data = Object.entries(paymentMethodTotals).map(([method, total]) => ({
+                        'Forma de Pago': method,
+                        'Monto Total': total
+                    }));
+                    filename = 'Ventas_por_Forma_de_Pago.xlsx';
+                    break;
+            }
+
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+            XLSX.writeFile(workbook, filename);
         }
 
         function exitApplication() {
