@@ -614,8 +614,7 @@
             salesHTML += `
                     </tbody>
                 </table>
-                <p class="text-end"><strong>Total de Ventas: $${totalSales.toFixed(2)}</strong></p>
-                <button class="btn btn-primary" onclick="printStatistics('product-sales')">Imprimir Estadísticas</button>
+                <h3>Total de Ventas: $${totalSales.toFixed(2)}</h3>
             `;
 
             mainContent.innerHTML = salesHTML;
@@ -623,50 +622,50 @@
 
         function showPaymentMethods() {
             const mainContent = document.getElementById("mainContent");
-            let paymentHTML = `
-                <h2>Resumen de Formas de Pago</h2>
+            let paymentMethodsHTML = `
+                <h2>Ventas por Forma de Pago</h2>
                 <table class="table">
                     <thead>
                         <tr>
                             <th>Forma de Pago</th>
-                            <th>Monto Total</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
             `;
 
-            let totalPayments = 0;
             for (const method in paymentMethodTotals) {
-                paymentHTML += `
+                paymentMethodsHTML += `
                     <tr>
                         <td>${method}</td>
                         <td>$${paymentMethodTotals[method].toFixed(2)}</td>
                     </tr>
                 `;
-                totalPayments += paymentMethodTotals[method];
             }
 
-            paymentHTML += `
+            paymentMethodsHTML += `
                     </tbody>
                 </table>
-                <p class="text-end"><strong>Total de Pagos: $${totalPayments.toFixed(2)}</strong></p>
-                <button class="btn btn-primary" onclick="printStatistics('payment-methods')">Imprimir Estadísticas</button>
             `;
 
-            mainContent.innerHTML = paymentHTML;
+            mainContent.innerHTML = paymentMethodsHTML;
         }
 
         function showDailySales() {
             const mainContent = document.getElementById("mainContent");
             const today = new Date().toDateString();
-            const dailySales = salesHistory.filter(sale => sale.date.toDateString() === today);
-            const totalSales = dailySales.reduce((sum, sale) => sum + sale.subtotal, 0);
+            let dailySales = 0;
+
+            salesHistory.forEach(sale => {
+                if (sale.date.toDateString() === today) {
+                    dailySales += sale.subtotal;
+                }
+            });
 
             mainContent.innerHTML = `
                 <h2>Ventas Totales del Día</h2>
-                <p class="lead">Fecha: ${today}</p>
-                <h3 class="mt-4">Total de Ventas: $${totalSales.toFixed(2)}</h3>
-                <button class="btn btn-primary mt-3" onclick="printStatistics('daily-sales')">Imprimir Estadísticas</button>
+                <h3>Fecha: ${today}</h3>
+                <h4>Total: $${dailySales.toFixed(2)}</h4>
             `;
         }
 
@@ -676,33 +675,37 @@
 
             salesHistory.forEach(sale => {
                 if (productSales[sale.productName]) {
-                    productSales[sale.productName] += sale.quantity;
+                    productSales[sale.productName].quantity += sale.quantity;
+                    productSales[sale.productName].total += sale.subtotal;
                 } else {
-                    productSales[sale.productName] = sale.quantity;
+                    productSales[sale.productName] = {
+                        quantity: sale.quantity,
+                        total: sale.subtotal
+                    };
                 }
             });
 
-            const sortedProducts = Object.entries(productSales)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 5);
+            const sortedProducts = Object.entries(productSales).sort((a, b) => b[1].quantity - a[1].quantity);
 
             let topProductsHTML = `
-                <h2>Top 5 Productos Más Vendidos</h2>
+                <h2>Productos Más Vendidos</h2>
                 <table class="table">
                     <thead>
                         <tr>
                             <th>Producto</th>
                             <th>Cantidad Vendida</th>
+                            <th>Total Vendido</th>
                         </tr>
                     </thead>
                     <tbody>
             `;
 
-            sortedProducts.forEach(([product, quantity]) => {
+            sortedProducts.forEach(([productName, data]) => {
                 topProductsHTML += `
                     <tr>
-                        <td>${product}</td>
-                        <td>${quantity}</td>
+                        <td>${productName}</td>
+                        <td>${data.quantity}</td>
+                        <td>$${data.total.toFixed(2)}</td>
                     </tr>
                 `;
             });
@@ -710,7 +713,6 @@
             topProductsHTML += `
                     </tbody>
                 </table>
-                <button class="btn btn-primary mt-3" onclick="printStatistics('top-selling-products')">Imprimir Estadísticas</button>
             `;
 
             mainContent.innerHTML = topProductsHTML;
@@ -724,13 +726,12 @@
                     <thead>
                         <tr>
                             <th>Forma de Pago</th>
-                            <th>Monto Total</th>
+                            <th>Total Vendido</th>
                         </tr>
                     </thead>
                     <tbody>
             `;
 
-            let totalSales = 0;
             for (const method in paymentMethodTotals) {
                 salesByMethodHTML += `
                     <tr>
@@ -738,40 +739,32 @@
                         <td>$${paymentMethodTotals[method].toFixed(2)}</td>
                     </tr>
                 `;
-                totalSales += paymentMethodTotals[method];
             }
 
             salesByMethodHTML += `
                     </tbody>
                 </table>
-                <p class="text-end"><strong>Total de Ventas: $${totalSales.toFixed(2)}</strong></p>
-                <button class="btn btn-primary mt-3" onclick="printStatistics('sales-by-payment-method')">Imprimir Estadísticas</button>
             `;
 
             mainContent.innerHTML = salesByMethodHTML;
         }
 
-        function printStatistics(statisticsType) {
-            const printWindow = window.open('', '', 'height=600,width=800');
-            printWindow.document.write('<html><head><title>Estadísticas</title>');
-            printWindow.document.write('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">');
-            printWindow.document.write('<style>@media print { body { width: 57mm; } }</style>');
-            printWindow.document.write('</head><body>');
-            printWindow.document.write('<img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broaster1-JNLLDnamafP3kGLc111K3gvd24XMVK.jpg" alt="Terreno Broaster Logo" style="width: 100%; max-width: 200px;">');
-            
-            switch(statisticsType) {
-                case 'product-sales':
-                case 'payment-methods':
-                case 'daily-sales':
-                case 'top-selling-products':
-                case 'sales-by-payment-method':
-                    printWindow.document.write(document.getElementById("mainContent").innerHTML);
-                    break;
-            }
-            
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
-            printWindow.print();
+        function exportToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Fecha,Número de Ticket,Producto,Cantidad,Precio,Subtotal,Forma de Pago\n";
+
+            salesHistory.forEach(sale => {
+                let row = `${sale.date.toLocaleString()},${sale.ticketNumber},${sale.productName},${sale.quantity},${sale.price},${sale.subtotal},${sale.paymentMethod}`;
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "ventas_terreno_broaster.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function exitApplication() {
@@ -781,67 +774,37 @@
         }
 
         function initializeProductCarousel() {
-            const carousel = document.getElementById('productCarousel');
-            carousel.innerHTML = '';
+            const carousel = $('#productCarousel');
+            carousel.empty();
             products.forEach(product => {
-                const item = document.createElement('div');
-                item.className = 'item';
-                item.innerHTML = `<img src="${product.image}" alt="${product.name}">`;
-                carousel.appendChild(item);
+                carousel.append(`
+                    <div class="item">
+                        <img src="${product.image}" alt="${product.name}" onclick="addToCart(${product.id})">
+                    </div>
+                `);
             });
-
-            $(document).ready(function(){
-                $(".owl-carousel").owlCarousel({
-                    loop: true,
-                    margin: 10,
-                    nav: true,
-                    responsive: {
-                        0: {
-                            items: 3
-                        },
-                        600: {
-                            items: 5
-                        },
-                        1000: {
-                            items: 7
-                        }
+            carousel.owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: true,
+                responsive: {
+                    0: {
+                        items: 3
+                    },
+                    600: {
+                        items: 5
+                    },
+                    1000: {
+                        items: 7
                     }
-                });
+                }
             });
         }
 
-        function exportToCSV() {
-            // Crear el contenido CSV
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Fecha,Número de Ticket,Producto,Cantidad,Precio,Subtotal,Forma de Pago\n";
-
-            salesHistory.forEach(function(sale) {
-                let row = [
-                    sale.date.toLocaleString(),
-                    sale.ticketNumber,
-                    sale.productName,
-                    sale.quantity,
-                    sale.price,
-                    sale.subtotal,
-                    sale.paymentMethod
-                ].join(",");
-                csvContent += row + "\n";
-            });
-
-            // Crear y descargar el archivo
-            var encodedUri = encodeURI(csvContent);
-            var link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "ventas_terreno_broaster.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // Inicializar la aplicación
-        displayProducts();
-        updateCartDate();
-        initializeProductCarousel();
+        document.addEventListener('DOMContentLoaded', () => {
+            displayProducts();
+            initializeProductCarousel();
+        });
     </script>
 </body>
 </html>
