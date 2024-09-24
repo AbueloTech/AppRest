@@ -162,6 +162,32 @@
             font-size: 0.8em;
             text-align: center;
         }
+        .payment-method-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 120px;
+            height: 120px;
+            margin: 5px;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            color: #28a745;
+            transition: all 0.3s ease;
+        }
+        .payment-method-button:hover, .payment-method-button.active {
+            background-color: #28a745;
+            color: white;
+        }
+        .payment-method-button i {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .payment-method-button span {
+            font-size: 0.9em;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -296,14 +322,30 @@
                         </table>
                         <p class="text-end"><strong>Total: $<span id="cart-total">0.00</span></strong></p>
                         <div class="mb-3">
-                            <label for="paymentMethod" class="form-label">Forma de Pago:</label>
-                            <select class="form-select" id="paymentMethod">
-                                <option value="Tarjeta de débito">Tarjeta de débito</option>
-                                <option value="Pago Móvil">Pago Móvil</option>
-                                <option value="Punto de Venta">Punto de Venta</option>
-                                <option value="Efectivo">Efectivo</option>
-                                <option value="Exento de pago">Exento de pago</option>
-                            </select>
+                            <label class="form-label">Forma de Pago:</label>
+                            <div id="paymentMethodButtons" class="d-flex flex-wrap justify-content-center">
+                                <button class="payment-method-button" data-payment-method="Tarjeta de débito">
+                                    <i class="fas fa-credit-card"></i>
+                                    <span>Tarjeta de débito</span>
+                                </button>
+                                <button class="payment-method-button" data-payment-method="Pago Móvil">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>Pago Móvil</span>
+                                </button>
+                                <button class="payment-metho
+d-button" data-payment-method="Punto de Venta">
+                                    <i class="fas fa-cash-register"></i>
+                                    <span>Punto de Venta</span>
+                                </button>
+                                <button class="payment-method-button" data-payment-method="Efectivo">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>Efectivo</span>
+                                </button>
+                                <button class="payment-method-button" data-payment-method="Exento de pago">
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                    <span>Exento de pago</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -320,8 +362,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="receiptModal
-Label">Recibo de Compra</h5>
+                    <h5 class="modal-title" id="receiptModalLabel">Recibo de Compra</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="receiptContent">
@@ -377,6 +418,7 @@ Label">Recibo de Compra</h5>
 
         const itemsPerPage = 8;
         let currentPage = 1;
+        let selectedPaymentMethod = "Tarjeta de débito";
 
         function displayProducts(productsToShow = products, page = 1) {
             const productList = document.getElementById("product-list");
@@ -518,11 +560,14 @@ Label">Recibo de Compra</h5>
                 alert("El carrito está vacío. Agregue productos antes de finalizar la compra.");
                 return;
             }
+            if (!selectedPaymentMethod) {
+                alert("Por favor, seleccione un método de pago antes de finalizar la compra.");
+                return;
+            }
             finalizePurchase();
         }
 
         function finalizePurchase() {
-            const paymentMethod = document.getElementById("paymentMethod").value;
             const receiptContent = document.getElementById("receiptContent");
             const now = new Date();
             ticketNumber++;
@@ -530,7 +575,7 @@ Label">Recibo de Compra</h5>
             let receiptHTML = `
                 <h6>Ticket #${ticketNumber}</h6>
                 <p>Fecha: ${now.toLocaleString()}</p>
-                <p>Forma de Pago: ${paymentMethod}</p>
+                <p>Forma de Pago: ${selectedPaymentMethod}</p>
                 <hr>
                 <table class="table table-sm">
                     <thead>
@@ -564,7 +609,7 @@ Label">Recibo de Compra</h5>
                     quantity: item.quantity,
                     price: item.price,
                     subtotal: subtotal,
-                    paymentMethod: paymentMethod
+                    paymentMethod: selectedPaymentMethod
                 });
             }
 
@@ -578,7 +623,7 @@ Label">Recibo de Compra</h5>
             receiptContent.innerHTML = receiptHTML;
 
             // Actualizar totales de formas de pago
-            paymentMethodTotals[paymentMethod] += total;
+            paymentMethodTotals[selectedPaymentMethod] += total;
 
             const cartModal = bootstrap.Modal.getInstance(document.getElementById('cartModal'));
             cartModal.hide();
@@ -884,10 +929,32 @@ Label">Recibo de Compra</h5>
             });
         }
 
+        function initializePaymentMethodButtons() {
+            const paymentMethodButtons = document.querySelectorAll('.payment-method-button');
+            paymentMethodButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    selectedPaymentMethod = button.dataset.paymentMethod;
+                    updatePaymentMethodButtons();
+                });
+            });
+        }
+
+        function updatePaymentMethodButtons() {
+            const buttons = document.querySelectorAll('.payment-method-button');
+            buttons.forEach(button => {
+                if (button.dataset.paymentMethod === selectedPaymentMethod) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             displayProducts();
             initializeProductCarousel();
             initializeCategoryButtons();
+            initializePaymentMethodButtons();
         });
     </script>
 </body>
