@@ -361,12 +361,15 @@ ModalLabel" aria-hidden="true">
             { id: 5, name: "Papitas Fritas", price: 5000, image: "https://tinyurl.com/25egzljn", category: "Extras" },
             { id: 6, name: "Cocacola 2 lts", price: 5500, image: "https://www.icnorte.com/arquivos/ids/156073-300-300/Gaseosa-sabor-Original-Coca-Cola-2-Lts-2-357.jpg?v=637345691863600000", category: "Bebidas" },
             { id: 8, name: "Pollo Asado entero", price: 34000, image: "https://tinyurl.com/26obth6n", category: "Pollo" },
-            { id: 9, name: "RaciÃ³n de Yuca", price: 3500, image: "https://tinyurl.com/28o3tc53", category: "Extras" },
-            { id: 10, name: "Doble JamÃ³n y Queso", price: 30000, image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80", category: "Pizza" },
+            { id: 9, name: "Ración de Yuca", price: 3500, image: "https://tinyurl.com/28o3tc53", category: "Extras" },
+            { id: 10, name: "Doble Jamón y Queso", price: 30000, image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80", category: "Pizza" },
             { id: 11, name: "Doble Queso", price: 35000, image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",  category: "Pizza" },
             { id: 12, name: "4 Estaciones", price: 30000, image: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80", category: "Pizza" },
             { id: 13, name: "Combo Doble", price: 38000, image: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80", category: "Pizza" },
             { id: 14, name: "Charcutera", price: 30000, image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80", category: "Pizza" },
+            { id: 15, name: "Hamburguesa de Carne", price: 16000, image: "https://images.unsplash.com/photo-1615297928064-24977384d0da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80", category: "Burger" },
+            { id: 16, name: "Hamburguesa doble Carne", price: 16000, image: "https://images.unsplash.com/photo-1615297928064-24977384d0da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80", category: "Burger" },
+            { id: 1, name: "Hamburguesa de Chuleta", price: 16000, image: "https://images.unsplash.com/photo-1615297928064-24977384d0da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80", category: "Burger" },
         ];
 
         const cart = {};
@@ -374,8 +377,8 @@ ModalLabel" aria-hidden="true">
         let ticketNumber = 1000;
         let salesHistory = [];
         let paymentMethodTotals = {
-            "Tarjeta de dÃ©bito": 0,
-            "Pago MÃ³vil": 0,
+            "Tarjeta de debito": 0,
+            "Pago Móvil": 0,
             "Punto de Venta": 0,
             "Efectivo": 0,
             "Exento de pago": 0
@@ -672,7 +675,7 @@ ModalLabel" aria-hidden="true">
                     <thead>
                         <tr>
                             <th>Fecha</th>
-                            <th>NÃºmero de Ticket</th>
+                            <th>Numero de Ticket</th>
                             <th>Producto</th>
                             <th>Cantidad</th>
                             <th>Precio</th>
@@ -749,7 +752,7 @@ ModalLabel" aria-hidden="true">
             });
 
             mainContent.innerHTML = `
-                <h2>Ventas Totales del DÃ­a</h2>
+                <h2>Ventas Totales del Di­a</h2>
                 <h3>Fecha: ${today}</h3>
                 <h4>Total: $${dailySales.toFixed(2)}</h4>
             `;
@@ -774,7 +777,7 @@ ModalLabel" aria-hidden="true">
             const sortedProducts = Object.entries(productSales).sort((a, b) => b[1].quantity - a[1].quantity);
 
             let topProductsHTML = `
-                <h2>Productos MÃ¡s Vendidos</h2>
+                <h2>Productos Mas Vendidos</h2>
                 <table class="table">
                     <thead>
                         <tr>
@@ -837,7 +840,7 @@ ModalLabel" aria-hidden="true">
 
         function exportToCSV() {
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Fecha,NÃºmero de Ticket,Producto,Cantidad,Precio,Subtotal,Forma de Pago\n";
+            csvContent += "Fecha,Numero de Ticket,Producto,Cantidad,Precio,Subtotal,Forma de Pago\n";
 
             salesHistory.forEach(sale => {
                 let row = `${sale.date.toLocaleString()},${sale.ticketNumber},${sale.productName},${sale.quantity},${sale.price},${sale.subtotal},${sale.paymentMethod}`;
@@ -854,7 +857,7 @@ ModalLabel" aria-hidden="true">
         }
 
         function exitApplication() {
-            if (confirm("Â¿EstÃ¡s seguro de que quieres salir de la aplicaciÃ³n?")) {
+            if (confirm("¿Estas seguro de que quieres salir de la aplicacion?")) {
                 window.close();
             }
         }
