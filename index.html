@@ -219,11 +219,11 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownEstadisticas" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-chart-bar"></i> Estadísticas
+                            <i class="fas fa-chart-bar"></i> EstadÃ­sticas
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstadisticas">
-                            <li><a class="dropdown-item" href="#" onclick="showDailySales()"><i class="fas fa-calendar-day"></i> Ventas Totales del Día</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showTopSellingProducts()"><i class="fas fa-star"></i> Productos Más Vendidos</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="showDailySales()"><i class="fas fa-calendar-day"></i> Ventas Totales del DÃ­a</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="showTopSellingProducts()"><i class="fas fa-star"></i> Productos MÃ¡s Vendidos</a></li>
                             <li><a class="dropdown-item" href="#" onclick="showSalesByPaymentMethod()"><i class="fas fa-money-bill-wave"></i> Ventas por Forma de Pago</a></li>
                         </ul>
                     </li>
@@ -248,7 +248,7 @@
 
     <div class="container mt-4">
         <div id="mainContent">
-            <!-- El contenido principal se cargará aquí dinámicamente -->
+            <!-- El contenido principal se cargarÃ¡ aquÃ­ dinÃ¡micamente -->
         </div>
     </div>
 
@@ -256,7 +256,7 @@
         <div class="row">
             <div class="col-12">
                 <div id="productCarousel" class="owl-carousel owl-theme">
-                    <!-- Las imágenes de los productos se agregarán aquí dinámicamente -->
+                    <!-- Las imÃ¡genes de los productos se agregarÃ¡n aquÃ­ dinÃ¡micamente -->
                 </div>
             </div>
         </div>
@@ -280,7 +280,7 @@
                                     <th>Cantidad</th>
                                     <th>Precio</th>
                                     <th>Subtotal</th>
-                                    <th>Acción</th>
+                                    <th>AcciÃ³n</th>
                                 </tr>
                             </thead>
                             <tbody id="cart-items"></tbody>
@@ -289,13 +289,13 @@
                         <div class="mb-3">
                             <label class="form-label">Forma de Pago:</label>
                             <div id="paymentMethodButtons" class="d-flex flex-wrap justify-content-center">
-                                <button class="payment-method-button" data-payment-method="Tarjeta de débito">
+                                <button class="payment-method-button" data-payment-method="Tarjeta de dÃ©bito">
                                     <i class="fas fa-credit-card"></i>
-                                    <span>Tarjeta de débito</span>
+                                    <span>Tarjeta de dÃ©bito</span>
                                 </button>
-                                <button class="payment-method-button" data-payment-method="Pago Móvil">
+                                <button class="payment-method-button" data-payment-method="Pago MÃ³vil">
                                     <i class="fas fa-mobile-alt"></i>
-                                    <span>Pago Móvil</span>
+                                    <span>Pago MÃ³vil</span>
                                 </button>
                                 <button class="payment-method-button" data-payment-method="Punto de Venta">
                                     <i class="fas fa-cash-register"></i>
@@ -331,7 +331,7 @@ ModalLabel" aria-hidden="true">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="receiptContent">
-                    <!-- El contenido del recibo se generará dinámicamente -->
+                    <!-- El contenido del recibo se generarÃ¡ dinÃ¡micamente -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -341,7 +341,7 @@ ModalLabel" aria-hidden="true">
         </div>
     </div>
 
-    <!-- Modal de confirmación -->
+    <!-- Modal de confirmaciÃ³n -->
     <div id="confirmationModal">
         <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
             <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
@@ -361,8 +361,8 @@ ModalLabel" aria-hidden="true">
             { id: 5, name: "Papitas Fritas", price: 5000, image: "https://tinyurl.com/25egzljn", category: "Extras" },
             { id: 6, name: "Cocacola 2 lts", price: 5500, image: "https://www.icnorte.com/arquivos/ids/156073-300-300/Gaseosa-sabor-Original-Coca-Cola-2-Lts-2-357.jpg?v=637345691863600000", category: "Bebidas" },
             { id: 8, name: "Pollo Asado entero", price: 34000, image: "https://tinyurl.com/26obth6n", category: "Pollo" },
-            { id: 9, name: "Ración de Yuca", price: 3500, image: "https://tinyurl.com/28o3tc53", category: "Extras" },
-            { id: 10, name: "Doble Jamón y Queso", price: 30000, image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80", category: "Pizza" },
+            { id: 9, name: "RaciÃ³n de Yuca", price: 3500, image: "https://tinyurl.com/28o3tc53", category: "Extras" },
+            { id: 10, name: "Doble JamÃ³n y Queso", price: 30000, image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80", category: "Pizza" },
             { id: 11, name: "Doble Queso", price: 35000, image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",  category: "Pizza" },
             { id: 12, name: "4 Estaciones", price: 30000, image: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80", category: "Pizza" },
             { id: 13, name: "Combo Doble", price: 38000, image: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80", category: "Pizza" },
@@ -374,8 +374,8 @@ ModalLabel" aria-hidden="true">
         let ticketNumber = 1000;
         let salesHistory = [];
         let paymentMethodTotals = {
-            "Tarjeta de débito": 0,
-            "Pago Móvil": 0,
+            "Tarjeta de dÃ©bito": 0,
+            "Pago MÃ³vil": 0,
             "Punto de Venta": 0,
             "Efectivo": 0,
             "Exento de pago": 0
@@ -498,7 +498,7 @@ ModalLabel" aria-hidden="true">
                     <td>${item.quantity}</td>
                     <td>$${item.price.toFixed(2)}</td>
                     <td>$${subtotal.toFixed(2)}</td>
-                    <td><span class="remove-item" onclick="removeFromCart(${productId})">❌</span></td>
+                    <td><span class="remove-item" onclick="removeFromCart(${productId})">âŒ</span></td>
                 `;
                 cartItems.appendChild(row);
             }
@@ -523,11 +523,11 @@ ModalLabel" aria-hidden="true">
 
         function acceptPurchase() {
             if (Object.keys(cart).length === 0) {
-                alert("El carrito está vacío. Agregue productos antes de finalizar la compra.");
+                alert("El carrito estÃ¡ vacÃ­o. Agregue productos antes de finalizar la compra.");
                 return;
             }
             if (!selectedPaymentMethod) {
-                alert("Por favor, seleccione un método de pago antes de finalizar la compra.");
+                alert("Por favor, seleccione un mÃ©todo de pago antes de finalizar la compra.");
                 return;
             }
             finalizePurchase();
@@ -597,7 +597,7 @@ ModalLabel" aria-hidden="true">
             const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
             receiptModal.show();
 
-            // Limpiar el carrito después de finalizar la compra
+            // Limpiar el carrito despuÃ©s de finalizar la compra
             Object.keys(cart).forEach(key => delete cart[key]);
             updateCart();
             selectedPaymentMethod = null;
@@ -623,7 +623,7 @@ ModalLabel" aria-hidden="true">
             mainContent.innerHTML = `
                 <div class="row">
                     <div class="col-md-12">
-                        <h2>Menú</h2>
+                        <h2>MenÃº</h2>
                         <div class="mb-3">
                             <div id="categoryButtons" class="d-flex flex-wrap justify-content-center">
                                 <button class="category-button active" data-category="">
@@ -672,7 +672,7 @@ ModalLabel" aria-hidden="true">
                     <thead>
                         <tr>
                             <th>Fecha</th>
-                            <th>Número de Ticket</th>
+                            <th>NÃºmero de Ticket</th>
                             <th>Producto</th>
                             <th>Cantidad</th>
                             <th>Precio</th>
@@ -749,7 +749,7 @@ ModalLabel" aria-hidden="true">
             });
 
             mainContent.innerHTML = `
-                <h2>Ventas Totales del Día</h2>
+                <h2>Ventas Totales del DÃ­a</h2>
                 <h3>Fecha: ${today}</h3>
                 <h4>Total: $${dailySales.toFixed(2)}</h4>
             `;
@@ -774,7 +774,7 @@ ModalLabel" aria-hidden="true">
             const sortedProducts = Object.entries(productSales).sort((a, b) => b[1].quantity - a[1].quantity);
 
             let topProductsHTML = `
-                <h2>Productos Más Vendidos</h2>
+                <h2>Productos MÃ¡s Vendidos</h2>
                 <table class="table">
                     <thead>
                         <tr>
@@ -837,7 +837,7 @@ ModalLabel" aria-hidden="true">
 
         function exportToCSV() {
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Fecha,Número de Ticket,Producto,Cantidad,Precio,Subtotal,Forma de Pago\n";
+            csvContent += "Fecha,NÃºmero de Ticket,Producto,Cantidad,Precio,Subtotal,Forma de Pago\n";
 
             salesHistory.forEach(sale => {
                 let row = `${sale.date.toLocaleString()},${sale.ticketNumber},${sale.productName},${sale.quantity},${sale.price},${sale.subtotal},${sale.paymentMethod}`;
@@ -854,7 +854,7 @@ ModalLabel" aria-hidden="true">
         }
 
         function exitApplication() {
-            if (confirm("¿Estás seguro de que quieres salir de la aplicación?")) {
+            if (confirm("Â¿EstÃ¡s seguro de que quieres salir de la aplicaciÃ³n?")) {
                 window.close();
             }
         }
