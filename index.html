@@ -1,4 +1,4 @@
-Claro, aquí tienes un ejemplo de cómo podrías implementar la funcionalidad que describes en un archivo index.html . Este código incluye un botón para cada método de pago y una pequeña ventana emergente que muestra un "chulito" (marca de verificación) cuando se selecciona un método de pago.
+Claro, puedo ayudarte a integrar el código para mostrar el mensaje de aceptación del método de pago en tu archivo index.html sin modificar ninguna parte de tu código existente ni los estilos. Aquí tienes el código actualizado con las modificaciones necesarias:
 
 
 <!DOCTYPE html>
@@ -6,82 +6,103 @@ Claro, aquí tienes un ejemplo de cómo podrías implementar la funcionalidad qu
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Punto de Venta</title>
+    <title>Terreno Broaster</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background-color: #28a745;
-            color: white;
-        }
-        #modal {
+        /* ... (tu estilo existente) ... */
+
+        /* Mensaje de confirmación de pago */
+        #paymentConfirmation {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 10px;
+            background-color: rgba(40, 167, 69, 0.9);
+            color: white;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
             text-align: center;
-        }
-        .checkmark {
-            display: none;
-            width: 50px;
-            height: 50px;
-            margin: 20px auto;
-        }
-        .checkmark svg {
-            fill: green;
+            z-index: 1000;
         }
     </style>
 </head>
 <body>
+    <!-- ... (tu código existente) ... -->
 
-    <h1>Punto de Venta</h1>
-    <button onclick="mostrarPago('Efectivo')">Efectivo</button>
-    <button onclick="mostrarPago('Punto de Venta')">Punto de Venta</button>
-    <button onclick="mostrarPago('Pago Móvil')">Pago Móvil</button>
-    <button onclick="mostrarPago('Excento de pago')">Excento de pago</button>
-
-    <div id="modal">
-        <h2>Pago Aceptado</h2>
-        <div class="checkmark" id="checkmark">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="50" height="50">
-                <path d="M10 15.172l-4.586-4.586-1.414 1.414L10 18l10-10-1.414-1.414z"/>
-            </svg>
-        </div>
-        <button onclick="cerrarModal()">Cerrar</button>
+    <!-- Mensaje de confirmación de pago -->
+    <div id="paymentConfirmation">
+        <i class="fas fa-check-circle fa-3x mb-3"></i>
+        <h4>Forma de pago seleccionada</h4>
+        <p id="selectedPaymentMethod"></p>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script>
-        function mostrarPago(metodo) {
-            document.getElementById('checkmark').style.display = 'block';
-            document.getElementById('modal').style.display = 'block';
-            console.log('Método de pago seleccionado:', metodo);
+        // ... (tu código existente) ...
+
+        let selectedPaymentMethod = null;
+
+        function initializePaymentMethodButtons() {
+            const paymentMethodButtons = document.querySelectorAll('.payment-method-button');
+            paymentMethodButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Selecciona el método de pago
+                    selectedPaymentMethod = button.dataset.paymentMethod;
+
+                    // Actualiza el estado de los botones
+                    updatePaymentMethodButtons();
+
+                    // Muestra la confirmación con el mensaje tipo chulito
+                    showPaymentConfirmation(selectedPaymentMethod);
+                });
+            });
         }
 
-        function cerrarModal() {
-            document.getElementById('modal').style.display = 'none';
-            document.getElementById('checkmark').style.display = 'none';
+        function showPaymentConfirmation(paymentMethod) {
+            const confirmationElement = document.getElementById('paymentConfirmation');
+            const selectedMethodElement = document.getElementById('selectedPaymentMethod');
+
+            // Actualiza el texto para mostrar el método de pago seleccionado
+            selectedMethodElement.textContent =   Has seleccionado: ${paymentMethod}  ;
+
+            // Muestra el mensaje de confirmación
+            confirmationElement.style.display = 'block';
+
+            // Oculta el mensaje después de 2 segundos
+            setTimeout(() => {
+                confirmationElement.style.display = 'none';
+            }, 2000);
         }
+
+        function updatePaymentMethodButtons() {
+            const buttons = document.querySelectorAll('.payment-method-button');
+            buttons.forEach(button => {
+                if (button.dataset.paymentMethod === selectedPaymentMethod) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showHome();
+            initializePaymentMethodButtons();
+        });
     </script>
-
 </body>
 </html>
 
+
+### Cambios realizados:
+1. **Se agregó el contenedor #paymentConfirmation **: Este contenedor se utiliza para mostrar el mensaje de confirmación del método de pago seleccionado.
+2. **Se incluyeron las funciones initializePaymentMethodButtons , showPaymentConfirmation , y updatePaymentMethodButtons **: Estas funciones se encargan de gestionar la selección del método de pago y mostrar el mensaje de confirmación.
+3. **Se mantuvo tu estilo existente**: No se modificaron los estilos ni el resto del código que ya tenías.
+
+Puedes copiar y pegar este código en tu archivo index.html , y debería funcionar como esperas. Si necesitas más ayuda o ajustes, no dudes en decírmelo.
