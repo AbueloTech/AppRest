@@ -187,20 +187,17 @@ function finalizePurchase() {
     ticketNumber++;
 
     let receiptHTML = `
-        <p class="text-center bold">Ticket #${ticketNumber}</p>
+        <p class="center bold">Ticket #${ticketNumber}</p>
         <p>Fecha: ${now.toLocaleString()}</p>
         <p>Forma de Pago: ${selectedPaymentMethod}</p>
         <hr>
         <table>
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th class="text-right">Cant.</th>
-                    <th class="text-right">Precio</th>
-                    <th class="text-right">Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
+            <tr>
+                <th>Producto</th>
+                <th class="right">Cant.</th>
+                <th class="right">Precio</th>
+                <th class="right">Subtotal</th>
+            </tr>
     `;
 
     for (const productId in cart) {
@@ -209,9 +206,9 @@ function finalizePurchase() {
         receiptHTML += `
             <tr>
                 <td>${item.name}</td>
-                <td class="text-right">${item.quantity}</td>
-                <td class="text-right">$${item.price.toFixed(2)}</td>
-                <td class="text-right">$${subtotal.toFixed(2)}</td>
+                <td class="right">${item.quantity}</td>
+                <td class="right">$${item.price.toFixed(2)}</td>
+                <td class="right">$${subtotal.toFixed(2)}</td>
             </tr>
         `;
 
@@ -228,10 +225,9 @@ function finalizePurchase() {
     }
 
     receiptHTML += `
-            </tbody>
         </table>
         <hr>
-        <p class="text-right bold">Total: $${total.toFixed(2)}</p>
+        <p class="right bold">Total: $${total.toFixed(2)}</p>
     `;
 
     receiptContent.innerHTML = receiptHTML;
@@ -251,10 +247,12 @@ function finalizePurchase() {
     selectedPaymentMethod = null;
     updatePaymentMethodButtons();
 }
-async function printReceipt() {
+
+function printReceipt() {
     const receiptContent = document.getElementById("receiptContent").innerHTML;
     
-    const printDoc = `
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
         <!DOCTYPE html>
         <html>
         <head>
@@ -265,105 +263,69 @@ async function printReceipt() {
                     margin: 0;
                 }
                 body {
+                    font-family: 'Courier New', monospace;
+                    font-size: 10px;
+                    line-height: 1.2;
                     width: 72mm;
                     margin: 0;
-                    padding: 5mm;
-                    font-size: 10px;
-                    font-family: Arial, sans-serif;
-                    line-height: 1.2;
+                    padding: 3mm;
                 }
                 .logo {
                     max-width: 60mm;
                     height: auto;
-                    margin-bottom: 5mm;
+                    display: block;
+                    margin: 0 auto 3mm;
                 }
                 table {
                     width: 100%;
                     border-collapse: collapse;
                 }
                 th, td {
-                    padding: 1mm;
                     text-align: left;
-                    font-size: 9px;
-                    border-bottom: 0.5px dotted #000;
+                    padding: 1mm 0;
                 }
-                hr {
-                    border: none;
-                    border-top: 1px solid #000;
-                    margin: 2mm 0;
-                }
-                p {
-                    margin: 1mm 0;
-                }
-                .text-center {
-                    text-align: center;
-                }
-                .text-right {
+                .right {
                     text-align: right;
+                }
+                .center {
+                    text-align: center;
                 }
                 .bold {
                     font-weight: bold;
                 }
-                @media print {
-                    html, body {
-                        width: 72mm;
-                        height: auto;
-                    }
-                    .page-break {
-                        page-break-before: always;
-                    }
+                hr {
+                    border: none;
+                    border-top: 1px dashed black;
+                    margin: 2mm 0;
                 }
             </style>
         </head>
         <body>
-            <div class="text-center">
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broaster1-JNLLDnamafP3kGLc111K3gvd24XMVK.jpg" 
-                     alt="Terreno Broaster Logo" 
-                     class="logo">
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broaster1-JNLLDnamafP3kGLc111K3gvd24XMVK.jpg" alt="Terreno Broaster Logo" class="logo">
+            <div class="center bold">
+                <p>Terreno Broaster</p>
+                <p>Recibo de Compra</p>
             </div>
+            <hr>
             ${receiptContent}
-            <div class="text-center" style="margin-top: 10mm;">
+            <hr>
+            <div class="center">
                 <p>¡Gracias por su compra!</p>
                 <p>Terreno Broaster</p>
             </div>
         </body>
         </html>
-    `;
+    `);
 
-    try {
-        const blob = new Blob([printDoc], { type: 'text/html' });
-        const blobURL = URL.createObjectURL(blob);
+    printWindow.document.close();
 
-        const printWindow = window.open(blobURL, '_blank', 'width=800,height=600');
-        if (printWindow) {
-            printWindow.onload = function() {
-                setTimeout(() => {
-                    try {
-                        printWindow.print();
-                        printWindow.onafterprint = function() {
-                            printWindow.close();
-                            URL.revokeObjectURL(blobURL);
-                        };
-                    } catch (printError) {
-                        console.error('Error al imprimir:', printError);
-                        alert('Hubo un error al imprimir. Por favor, intente nuevamente o use la función de impresión de su navegador.');
-                        printWindow.close();
-                        URL.revokeObjectURL(blobURL);
-                    }
-                }, 1000);
-            };
-        } else {
-            throw new Error('No se pudo abrir la ventana de impresión');
-        }
-    } catch (error) {
-        console.error('Error al preparar la impresión:', error);
-        alert('Hubo un error al preparar la impresión. Por favor, intente nuevamente o use la función de impresión de su navegador.');
-        
-        // Alternativa: abrir el contenido en una nueva pestaña para que el usuario pueda imprimir manualmente
-        const newTab = window.open();
-        newTab.document.write(printDoc);
-        newTab.document.close();
-    }
+    printWindow.onload = function() {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.onafterprint = function() {
+            printWindow.close();
+        };
+    };
 }
 
 function showHome() {
