@@ -251,3 +251,10 @@ table {
 td, th {
     padding: 5px; /* Ajustar el padding para que sea mínimo */
 }
+
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+    }
+}
