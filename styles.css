@@ -238,3 +238,16 @@
  font-size :1.2 em ;    
 }
 
+#receiptContent {
+    margin: 0;
+    padding: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* Evitar espacios entre celdas */
+}
+
+td, th {
+    padding: 5px; /* Ajustar el padding para que sea mínimo */
+}
