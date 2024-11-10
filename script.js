@@ -246,10 +246,10 @@ function finalizePurchase() {
 }
 
 function printReceipt() {
-    const receiptContent = document.getElementById("receiptContent").innerHTML;
+    const receiptContent = document.getElementById("receiptContent").innerHTML.trim(); // Eliminar espacios en blanco
     const printWindow = window.open('', '', 'height=400,width=600');
     printWindow.document.write('<html><head><title>Ticket de Venta</title>');
-    printWindow.document.write('<style>body{font-family: Arial;}</style></head><body>');
+    printWindow.document.write('<style>body{font-family: Arial; margin: 0; padding: 0;}</style></head><body>');
     printWindow.document.write(receiptContent);
     printWindow.document.write('</body></html>');
     printWindow.document.close();
