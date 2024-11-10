@@ -253,49 +253,41 @@ function finalizePurchase() {
 }
 
 async function printReceipt() {
-    // Crear el contenido del recibo
     const receiptContent = document.getElementById("receiptContent").innerHTML;
     
-    // Crear un documento HTML específico para impresión
     const printDoc = `
         <!DOCTYPE html>
         <html>
         <head>
             <title>Recibo de Compra - Terreno Broaster</title>
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
             <style>
                 @page {
-                    size: 80mm 297mm; /* Tamaño típico de papel de recibo */
+                    size: 80mm 297mm;
                     margin: 0;
                 }
-                @media print {
-                    body {
-                        width: 72mm; /* Ancho efectivo de impresión */
-                        margin: 0;
-                        padding: 5mm;
-                        font-size: 12px;
-                    }
-                    .logo {
-                        max-width: 60mm;
-                        height: auto;
-                    }
-                    table {
-                        width: 100%;
-                        margin-bottom: 10px;
-                        border-collapse: collapse;
-                    }
-                    th, td {
-                        padding: 2px;
-                        text-align: left;
-                        font-size: 10px;
-                    }
-                    hr {
-                        margin: 5px 0;
-                    }
-                    /* Ocultar elementos innecesarios para impresión */
-                    .no-print {
-                        display: none !important;
-                    }
+                body {
+                    width: 72mm;
+                    margin: 0;
+                    padding: 5mm;
+                    font-size: 12px;
+                    font-family: Arial, sans-serif;
+                }
+                .logo {
+                    max-width: 60mm;
+                    height: auto;
+                }
+                table {
+                    width: 100%;
+                    margin-bottom: 10px;
+                    border-collapse: collapse;
+                }
+                th, td {
+                    padding: 2px;
+                    text-align: left;
+                    font-size: 10px;
+                }
+                hr {
+                    margin: 5px 0;
                 }
             </style>
         </head>
@@ -316,45 +308,42 @@ async function printReceipt() {
     `;
 
     try {
-        // Crear un Blob con el contenido HTML
         const blob = new Blob([printDoc], { type: 'text/html' });
         const blobURL = URL.createObjectURL(blob);
 
-        // Abrir ventana de impresión
-        const printWindow = window.open(blobURL, 'PRINT', 'height=600,width=800');
-
-        printWindow.onload = function() {
-            // Esperar a que los estilos se carguen
-            setTimeout(async () => {
-                try {
-                    if (printWindow.document.queryCommandSupported('print')) {
-                        // Mostrar el diálogo de impresión
-                        const printResult = await printWindow.show();
-                        
-                        // Limpiar recursos después de imprimir
-                        URL.revokeObjectURL(blobURL);
-                        if (!printResult) {
-                            printWindow.close();
-                        }
-                    } else {
-                        // Fallback para navegadores que no soportan la API moderna
-                        printWindow.print();
-                        setTimeout(() => {
+        if (window.print) {
+            const printWindow = window.open(blobURL, '_blank');
+            if (printWindow) {
+                printWindow.onload = function() {
+                    setTimeout(() => {
+                        try {
+                            printWindow.print();
+                            printWindow.onafterprint = function() {
+                                printWindow.close();
+                                URL.revokeObjectURL(blobURL);
+                            };
+                        } catch (printError) {
+                            console.error('Error al imprimir:', printError);
+                            alert('Hubo un error al imprimir. Por favor, intente nuevamente o use la función de impresión de su navegador.');
                             printWindow.close();
                             URL.revokeObjectURL(blobURL);
-                        }, 1000);
-                    }
-                } catch (error) {
-                    console.error('Error al imprimir:', error);
-                    alert('Hubo un error al intentar imprimir. Por favor, intente nuevamente.');
-                    printWindow.close();
-                    URL.revokeObjectURL(blobURL);
-                }
-            }, 1000);
-        };
+                        }
+                    }, 1000);
+                };
+            } else {
+                throw new Error('No se pudo abrir la ventana de impresión');
+            }
+        } else {
+            throw new Error('La función de impresión no está disponible en este navegador');
+        }
     } catch (error) {
         console.error('Error al preparar la impresión:', error);
-        alert('Hubo un error al preparar la impresión. Por favor, intente nuevamente.');
+        alert('Hubo un error al preparar la impresión. Por favor, intente nuevamente o use la función de impresión de su navegador.');
+        
+        // Alternativa: abrir el contenido en una nueva pestaña para que el usuario pueda imprimir manualmente
+        const newTab = window.open();
+        newTab.document.write(printDoc);
+        newTab.document.close();
     }
 }
 
