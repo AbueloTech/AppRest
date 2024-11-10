@@ -255,7 +255,7 @@ function finalizePurchase() {
 async function printReceipt() {
     // Crear el contenido del recibo
     const receiptContent = document.getElementById("receiptContent").innerHTML;
-    
+    //Esta es una prueba para ver si funciona github
     // Crear un documento HTML específico para impresión
     const printDoc = `
         <!DOCTYPE html>
