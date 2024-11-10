@@ -187,17 +187,17 @@ function finalizePurchase() {
     ticketNumber++;
 
     let receiptHTML = `
-        <h6>Ticket #${ticketNumber}</h6>
+        <p class="text-center bold">Ticket #${ticketNumber}</p>
         <p>Fecha: ${now.toLocaleString()}</p>
         <p>Forma de Pago: ${selectedPaymentMethod}</p>
         <hr>
-        <table class="table table-sm">
+        <table>
             <thead>
                 <tr>
                     <th>Producto</th>
-                    <th>Cant.</th>
-                    <th>Precio</th>
-                    <th>Subtotal</th>
+                    <th class="text-right">Cant.</th>
+                    <th class="text-right">Precio</th>
+                    <th class="text-right">Subtotal</th>
                 </tr>
             </thead>
             <tbody>
@@ -209,9 +209,9 @@ function finalizePurchase() {
         receiptHTML += `
             <tr>
                 <td>${item.name}</td>
-                <td>${item.quantity}</td>
-                <td>$${item.price.toFixed(2)}</td>
-                <td>$${subtotal.toFixed(2)}</td>
+                <td class="text-right">${item.quantity}</td>
+                <td class="text-right">$${item.price.toFixed(2)}</td>
+                <td class="text-right">$${subtotal.toFixed(2)}</td>
             </tr>
         `;
 
@@ -231,7 +231,7 @@ function finalizePurchase() {
             </tbody>
         </table>
         <hr>
-        <p class="text-end"><strong>Total: $${total.toFixed(2)}</strong></p>
+        <p class="text-right bold">Total: $${total.toFixed(2)}</p>
     `;
 
     receiptContent.innerHTML = receiptHTML;
@@ -269,37 +269,61 @@ async function printReceipt() {
                     width: 72mm;
                     margin: 0;
                     padding: 5mm;
-                    font-size: 12px;
+                    font-size: 10px;
                     font-family: Arial, sans-serif;
+                    line-height: 1.2;
                 }
                 .logo {
                     max-width: 60mm;
                     height: auto;
+                    margin-bottom: 5mm;
                 }
                 table {
                     width: 100%;
-                    margin-bottom: 10px;
                     border-collapse: collapse;
                 }
                 th, td {
-                    padding: 2px;
+                    padding: 1mm;
                     text-align: left;
-                    font-size: 10px;
+                    font-size: 9px;
+                    border-bottom: 0.5px dotted #000;
                 }
                 hr {
-                    margin: 5px 0;
+                    border: none;
+                    border-top: 1px solid #000;
+                    margin: 2mm 0;
+                }
+                p {
+                    margin: 1mm 0;
+                }
+                .text-center {
+                    text-align: center;
+                }
+                .text-right {
+                    text-align: right;
+                }
+                .bold {
+                    font-weight: bold;
+                }
+                @media print {
+                    html, body {
+                        width: 72mm;
+                        height: auto;
+                    }
+                    .page-break {
+                        page-break-before: always;
+                    }
                 }
             </style>
         </head>
         <body>
-            <div style="text-align: center;">
+            <div class="text-center">
                 <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broaster1-JNLLDnamafP3kGLc111K3gvd24XMVK.jpg" 
                      alt="Terreno Broaster Logo" 
-                     class="logo" 
-                     style="max-width: 200px;">
+                     class="logo">
             </div>
             ${receiptContent}
-            <div style="text-align: center; margin-top: 20px;">
+            <div class="text-center" style="margin-top: 10mm;">
                 <p>¡Gracias por su compra!</p>
                 <p>Terreno Broaster</p>
             </div>
@@ -311,30 +335,26 @@ async function printReceipt() {
         const blob = new Blob([printDoc], { type: 'text/html' });
         const blobURL = URL.createObjectURL(blob);
 
-        if (window.print) {
-            const printWindow = window.open(blobURL, '_blank');
-            if (printWindow) {
-                printWindow.onload = function() {
-                    setTimeout(() => {
-                        try {
-                            printWindow.print();
-                            printWindow.onafterprint = function() {
-                                printWindow.close();
-                                URL.revokeObjectURL(blobURL);
-                            };
-                        } catch (printError) {
-                            console.error('Error al imprimir:', printError);
-                            alert('Hubo un error al imprimir. Por favor, intente nuevamente o use la función de impresión de su navegador.');
+        const printWindow = window.open(blobURL, '_blank', 'width=800,height=600');
+        if (printWindow) {
+            printWindow.onload = function() {
+                setTimeout(() => {
+                    try {
+                        printWindow.print();
+                        printWindow.onafterprint = function() {
                             printWindow.close();
                             URL.revokeObjectURL(blobURL);
-                        }
-                    }, 1000);
-                };
-            } else {
-                throw new Error('No se pudo abrir la ventana de impresión');
-            }
+                        };
+                    } catch (printError) {
+                        console.error('Error al imprimir:', printError);
+                        alert('Hubo un error al imprimir. Por favor, intente nuevamente o use la función de impresión de su navegador.');
+                        printWindow.close();
+                        URL.revokeObjectURL(blobURL);
+                    }
+                }, 1000);
+            };
         } else {
-            throw new Error('La función de impresión no está disponible en este navegador');
+            throw new Error('No se pudo abrir la ventana de impresión');
         }
     } catch (error) {
         console.error('Error al preparar la impresión:', error);
