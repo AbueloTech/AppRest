@@ -247,56 +247,13 @@ function finalizePurchase() {
 
 function printReceipt() {
     const receiptContent = document.getElementById("receiptContent").innerHTML;
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Recibo de Compra - Terreno Broaster</title>
-            <style>
-                @page { size: 58mm auto; margin: 0; }
-                body { 
-                    font-family: 'Courier New', monospace; 
-                    font-size: 8px; 
-                    line-height: 1.2; 
-                    margin: 0; 
-                    padding: 0; 
-                }
-                .logo { max-width: 50mm; height: auto; display: block; margin: 0 auto 2mm; }
-                table { width: 100%; border-collapse: collapse; }
-                th, td { text-align: left; padding: 0.5mm; }
-                .right { text-align: right; }
-                .center { text-align: center; }
-                .bold { font-weight: bold; }
-                hr { border: none; border-top: 1px dashed black; margin: 1mm 0; }
-            </style>
-        </head>
-        <body>
-            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broaster1-JNLLDnamafP3kGLc111K3gvd24XMVK.jpg" alt="Terreno Broaster Logo" class="logo">
-            <div class="center bold">
-                <p>Terreno Broaster</p>
-                <p>Recibo de Compra</p>
-            </div>
-            <hr>
-            ${receiptContent}
-            <hr>
-            <div class="center">
-                <p>¡Gracias por su compra!</p>
-                <p>Terreno Broaster</p>
-            </div>
-        </body>
-        </html>
-    `);
+    const printWindow = window.open('', '', 'height=400,width=600');
+    printWindow.document.write('<html><head><title>Ticket de Venta</title>');
+    printWindow.document.write('<style>body{font-family: Arial;}</style></head><body>');
+    printWindow.document.write(receiptContent);
+    printWindow.document.write('</body></html>');
     printWindow.document.close();
-    printWindow.onload = function() {
-        printWindow.focus();
-        setTimeout(() => {
-            printWindow.print();
-            printWindow.onafterprint = function() {
-                printWindow.close();
-            };
-        }, 1000);
-    };
+    printWindow.print();
 }
 
 function showHome() {
