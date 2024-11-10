@@ -251,7 +251,6 @@ function finalizePurchase() {
     selectedPaymentMethod = null;
     updatePaymentMethodButtons();
 }
-
 async function printReceipt() {
     const receiptContent = document.getElementById("receiptContent").innerHTML;
     
