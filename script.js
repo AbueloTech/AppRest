@@ -247,7 +247,6 @@ function finalizePurchase() {
 
 function printReceipt() {
     const receiptContent = document.getElementById("receiptContent").innerHTML;
-    
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
         <!DOCTYPE html>
@@ -255,55 +254,21 @@ function printReceipt() {
         <head>
             <title>Recibo de Compra - Terreno Broaster</title>
             <style>
-                @page {
-                    size: 80mm 200mm;
-                    margin: 0;
+                @page { size: 58mm auto; margin: 0; }
+                body { 
+                    font-family: 'Courier New', monospace; 
+                    font-size: 8px; 
+                    line-height: 1.2; 
+                    margin: 0; 
+                    padding: 0; 
                 }
-                body {
-                    font-family: 'Courier New', monospace;
-                    font-size: 8px;
-                    line-height: 1.2;
-                    width: 72mm;
-                    margin: 0;
-                    padding: 2mm;
-                }
-                .logo {
-                    max-width: 50mm;
-                    height: auto;
-                    display: block;
-                    margin: 0 auto 2mm;
-                }
-                table {
-                    width: 100%;
-                    border-collapse: collapse;
-                }
-                th, td {
-                    text-align: left;
-                    padding: 0.5mm 0;
-                }
-                .right {
-                    text-align: right;
-                }
-                .center {
-                    text-align: center;
-                }
-                .bold {
-                    font-weight: bold;
-                }
-                hr {
-                    border: none;
-                    border-top: 1px dashed black;
-                    margin: 1mm 0;
-                }
-                @media print {
-                    html, body {
-                        width: 72mm;
-                        height: auto;
-                    }
-                    .page-break {
-                        page-break-before: always;
-                    }
-                }
+                .logo { max-width: 50mm; height: auto; display: block; margin: 0 auto 2mm; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { text-align: left; padding: 0.5mm; }
+                .right { text-align: right; }
+                .center { text-align: center; }
+                .bold { font-weight: bold; }
+                hr { border: none; border-top: 1px dashed black; margin: 1mm 0; }
             </style>
         </head>
         <body>
@@ -322,9 +287,7 @@ function printReceipt() {
         </body>
         </html>
     `);
-
     printWindow.document.close();
-
     printWindow.onload = function() {
         printWindow.focus();
         setTimeout(() => {
