@@ -238,17 +238,3 @@
  font-size :1.2 em ;    
 }
 
-/* Estilos para impresión */
-@media print {
-     @page { size:58mm auto; margin:0;}
-     body { font-family:'Courier New', monospace;font-size:.8em;margin:.2em;padding:.2em;}
-     table { width:auto;border-collapse:collapse;}
-     th, td { text-align:left;padding:.1em;}
-     hr { border:none;border-top:dashed black;margin:.1em;}
-     .center { text-align:center;}
-     .right { text-align:right;}
-     /* Evitar que se imprima el fondo */
-     /* {-webkit-print-color-adjust:disable;}
-     /* Ocultar elementos innecesarios durante la impresión */
-     .no-print { display:none !important;}
- }
