@@ -189,14 +189,14 @@ function finalizePurchase() {
     let receiptHTML = `
         <p class="center bold">Ticket #${ticketNumber}</p>
         <p>Fecha: ${now.toLocaleString()}</p>
-        <p>Forma de Pago: ${selectedPaymentMethod}</p>
+        <p>Pago: ${selectedPaymentMethod}</p>
         <hr>
         <table>
             <tr>
-                <th>Producto</th>
-                <th class="right">Cant.</th>
+                <th>Prod</th>
+                <th class="right">Cant</th>
                 <th class="right">Precio</th>
-                <th class="right">Subtotal</th>
+                <th class="right">Total</th>
             </tr>
     `;
 
@@ -205,14 +205,13 @@ function finalizePurchase() {
         const subtotal = item.price * item.quantity;
         receiptHTML += `
             <tr>
-                <td>${item.name}</td>
+                <td>${item.name.substring(0, 12)}${item.name.length > 12 ? '...' : ''}</td>
                 <td class="right">${item.quantity}</td>
-                <td class="right">$${item.price.toFixed(2)}</td>
-                <td class="right">$${subtotal.toFixed(2)}</td>
+                <td class="right">${item.price.toFixed(2)}</td>
+                <td class="right">${subtotal.toFixed(2)}</td>
             </tr>
         `;
 
-        // Agregar a la historia de ventas
         salesHistory.push({
             date: now,
             ticketNumber: ticketNumber,
@@ -232,7 +231,6 @@ function finalizePurchase() {
 
     receiptContent.innerHTML = receiptHTML;
 
-    // Actualizar totales de formas de pago
     paymentMethodTotals[selectedPaymentMethod] += total;
 
     const cartModal = bootstrap.Modal.getInstance(document.getElementById('cartModal'));
@@ -241,7 +239,6 @@ function finalizePurchase() {
     const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
     receiptModal.show();
 
-    // Limpiar el carrito después de finalizar la compra
     Object.keys(cart).forEach(key => delete cart[key]);
     updateCart();
     selectedPaymentMethod = null;
@@ -259,22 +256,22 @@ function printReceipt() {
             <title>Recibo de Compra - Terreno Broaster</title>
             <style>
                 @page {
-                    size: 80mm 297mm;
+                    size: 80mm 200mm;
                     margin: 0;
                 }
                 body {
                     font-family: 'Courier New', monospace;
-                    font-size: 10px;
+                    font-size: 8px;
                     line-height: 1.2;
                     width: 72mm;
                     margin: 0;
-                    padding: 3mm;
+                    padding: 2mm;
                 }
                 .logo {
-                    max-width: 60mm;
+                    max-width: 50mm;
                     height: auto;
                     display: block;
-                    margin: 0 auto 3mm;
+                    margin: 0 auto 2mm;
                 }
                 table {
                     width: 100%;
@@ -282,7 +279,7 @@ function printReceipt() {
                 }
                 th, td {
                     text-align: left;
-                    padding: 1mm 0;
+                    padding: 0.5mm 0;
                 }
                 .right {
                     text-align: right;
@@ -296,7 +293,16 @@ function printReceipt() {
                 hr {
                     border: none;
                     border-top: 1px dashed black;
-                    margin: 2mm 0;
+                    margin: 1mm 0;
+                }
+                @media print {
+                    html, body {
+                        width: 72mm;
+                        height: auto;
+                    }
+                    .page-break {
+                        page-break-before: always;
+                    }
                 }
             </style>
         </head>
@@ -321,10 +327,12 @@ function printReceipt() {
 
     printWindow.onload = function() {
         printWindow.focus();
-        printWindow.print();
-        printWindow.onafterprint = function() {
-            printWindow.close();
-        };
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.onafterprint = function() {
+                printWindow.close();
+            };
+        }, 1000);
     };
 }
 
