@@ -245,16 +245,24 @@ function finalizePurchase() {
     updatePaymentMethodButtons();
 }
 
-function printReceipt() {
-    const receiptContent = document.getElementById("receiptContent").innerHTML.trim(); // Eliminar espacios en blanco
-    const printWindow = window.open('', '', 'height=400,width=600');
-    printWindow.document.write('<html><head><title>Ticket de Venta</title>');
-    printWindow.document.write('<style>body{font-family: Arial; margin: 0; padding: 0;}</style></head><body>');
-    printWindow.document.write(receiptContent);
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
-    printWindow.print();
-}
+function printReceipt(receiptData) {
+    fetch('/print-receipt', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(receiptData),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log(data.message);
+      } else {
+        console.error(data.message);
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  }
 
 function showHome() {
     const mainContent = document.getElementById("mainContent");
