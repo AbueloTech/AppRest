@@ -245,24 +245,37 @@ function finalizePurchase() {
     updatePaymentMethodButtons();
 }
 
-function printReceipt(receiptData) {
-    fetch('/print-receipt', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(receiptData),
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        console.log(data.message);
-      } else {
-        console.error(data.message);
-      }
-    })
-    .catch(error => console.error('Error:', error));
-  }
+function printReceipt() {
+    const receiptContent = document.getElementById("receiptContent").innerHTML;
+    const printWindow = window.open('', '', 'height=600,width=800');
+    
+    printWindow.document.write('<html><head><title>Recibo de Compra</title>');
+    printWindow.document.write('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">');
+    printWindow.document.write('<style>');
+    printWindow.document.write('@media print {');
+    printWindow.document.write('body { width: 57mm; margin: 0; padding: 0; }'); // Ajustar el tamaño de la página
+    printWindow.document.write('img { width: 100%; max-width: 180px; margin-bottom: 10px; }'); // Ajustar la imagen para que no sea demasiado grande
+    printWindow.document.write('table { width: 100%; }'); // Hacer que la tabla ocupe todo el ancho disponible
+    printWindow.document.write('td, th { font-size: 10px; padding: 2px; text-align: left; }'); // Ajustar el tamaño de las celdas
+    printWindow.document.write('h6, p { font-size: 10px; margin: 0; padding: 0; }'); // Reducir el tamaño de los textos
+    printWindow.document.write('hr { margin: 0; border: 1px solid #000; }'); // Ajustar el estilo de las líneas
+    printWindow.document.write('}');
+    printWindow.document.write('</style>');
+    printWindow.document.write('</head><body>');
+    
+    // Incluir el logo
+    printWindow.document.write('<img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Broaster1-JNLLDnamafP3kGLc111K3gvd24XMVK.jpg" alt="Terreno Broaster Logo">');
+    
+    // Incluir el contenido del recibo
+    printWindow.document.write(receiptContent);
+    
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    
+    // Ejecutar la impresión
+    printWindow.print();
+}
+
 
 function showHome() {
     const mainContent = document.getElementById("mainContent");
